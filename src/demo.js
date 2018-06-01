@@ -319,20 +319,32 @@ function BoilingVerdict(props) {
 class Calculator extends React.Component {
   constructor(props) {
     super(props)
-    this.handleChange = this.handleChange.bind(this)
-    this.state = {temperature:''}
+    this.handleCelsiusChange = this.handleCelsiusChange.bind(this)
+    this.handleFahrenheitChange = this.handleFahrenheitChange.bind(this)
+    this.state = {temperature:'',scale:'c'}
   }
-  handleChange(e) {
-    this.setState({temperature:e.target.value})
+  handleCelsiusChange(temperature) {
+    this.setState({scale:'c',temperature})
+  }
+  handleFahrenheitChange(temperature) {
+    this.setState({scale:'f',temperature})
   }
   render() {
+    const scale = this.state.scale
     const temperature = this.state.temperature
+    const celsius = scale === 'f' ? tryConvert(temperature,toCelsius):temperature
+    const fahrenheit = scale === 'c'? tryConvert(temperature,toFahrenheit):temperature
     return (
-      <fieldset>
-        <legend>输入一个摄氏温度</legend>
-        <input type="text" vlaue={temperature} onChange={this.handleChange}/>
-        <BoilingVerdict celsius={parseFloat(temperature)} />
-      </fieldset>
+      <div>
+        <TemperatureInput scale="c" temperature={celsius} onTemperatureChange={this.handleCelsiusChange} />
+        <TemperatureInput scale="f" temperature={fahrenheit} onTemperatureChange={this.handleFahrenheitChange} />
+        <BoilingVerdict celsius={parseFloat(celsius)} />
+        {/*<fieldset>
+          <legend>输入一个摄氏温度</legend>
+          <input type="text" vlaue={temperature} onChange={this.handleChange}/>
+          <BoilingVerdict celsius={parseFloat(temperature)} />
+        </fieldset>*/}
+      </div>
     )
   }
 }
@@ -356,19 +368,20 @@ class TemperatureInput extends React.Component {
   constructor(props) {
     super(props)
     this.handleChange = this.handleChange.bind(this)
-    this.state = {temperature:''}
   }
   handleChange(e) {
-    this.setState({temperature:e.target.value})
+    //this.setState({temperature:e.target.value})
+    this.props.onTemperatureChange(e.target.value)
   }
   render() {
-    const temperature = this.state.temperature
+    //const temperature = this.state.temperature
+    const temperature = this.props.temperature
     const scale = this.props.scale
     return (
       <fieldset>
         <legend>Enter temperature in {scaleNames[scale]}:</legend>
         <input type="text" value={temperature} onChange={this.handleChange} />
-        <BoilingVerdict celsius={parseFloat(temperature)} />
+        {/*<BoilingVerdict celsius={parseFloat(temperature)} />*/}
       </fieldset>
     )
   }
