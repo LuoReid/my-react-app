@@ -558,8 +558,46 @@ const PRODUCTS = [
   {category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
   {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
 ]
-
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.myRef = React.createRef();
+  }
+  render() {
+    return <div ref={this.myRef} />;
+  }
+}
+class CustomTextInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.textInput = React.createRef();
+    this.focusTextInput = this.focusTextInput.bind(this);
+  }
+  focusTextInput(){
+    this.textInput.current.focus();
+  }
+  render() {
+    return (
+      <div>
+        <input type="text" ref={this.textInput} />
+        <input type="button" value="Focus" onClick={this.focusTextInput} the="" text="" input=""/>
+      </div>
+    )
+  }
+}
+class AutoFocusTextInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.textInput = React.createRef();
+  }
+  componentDidMount() {
+    this.textInput.current.focusTextInput();
+  }
+  render() {
+    return (<CustomTextInput ref={this.textInput} />)
+  }
+}
 ReactDOM.render(
-  <Greeting isLoggedIn={true} products={PRODUCTS} />
+  <AutoFocusTextInput isLoggedIn={true} products={PRODUCTS} />
   ,document.querySelector('#foot')
   )
